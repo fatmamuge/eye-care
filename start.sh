@@ -1,2 +1,5 @@
 #!/bin/bash
-python3 /home/muge/Documents/repos/eye-care/eyecare.py
+
+sleep 10
+
+/usr/bin/python3 /home/muge/Documents/repos/eye-care/eyecare.py

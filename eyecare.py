@@ -1,29 +1,67 @@
 import tkinter as tk
-import time
-import threading
 
 WORK_MINUTES = 25
+INTERVAL_MS = int(WORK_MINUTES * 60 * 1000)
 
-def popup():
-    root = tk.Tk()
-    root.title("Göz Molası")
 
-    tk.Label(
-        root,
-        text="20 saniye boyunca uzağa bak 👀",
-        font=("Arial", 16)
-    ).pack(padx=30, pady=30)
+class EyeCare:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.withdraw()  # Ana pencereyi gizle
 
-    tk.Button(root, text="Tamam", command=root.destroy).pack(pady=10)
+        self.popup_open = False
 
-    root.mainloop()
+        # İlk zamanlayıcı
+        self.start_timer()
 
-def timer():
-    while True:
-        time.sleep(WORK_MINUTES * 60)
-        popup()
+        self.root.mainloop()
 
-threading.Thread(target=timer, daemon=True).start()
+    def start_timer(self):
+        self.root.after(INTERVAL_MS, self.show_popup)
 
-while True:
-    time.sleep(1)
+    def show_popup(self):
+        print("show_popup() called")
+
+        # Eğer pencere zaten açıksa yenisini açma
+        if self.popup_open:
+            return
+
+        self.popup_open = True
+
+        popup = tk.Toplevel(self.root)
+        popup.title("👀 EyeCare")
+
+        popup.geometry("360x180")
+        popup.resizable(False, False)
+
+        tk.Label(
+            popup,
+            text="👀 Eye Break Time!",
+            font=("Arial", 16, "bold")
+        ).pack(pady=(20, 10))
+
+        tk.Label(
+            popup,
+            text="Look at something far away\nfor 20 seconds.",
+            font=("Arial", 12)
+        ).pack()
+
+        def close_popup():
+            self.popup_open = False
+            popup.destroy()
+
+            # Pencere kapandıktan sonra yeni sayaç başlasın
+            self.start_timer()
+
+        tk.Button(
+            popup,
+            text="OK",
+            command=close_popup,
+            width=10
+        ).pack(pady=20)
+
+        popup.protocol("WM_DELETE_WINDOW", close_popup)
+
+
+if __name__ == "__main__":
+    EyeCare()
