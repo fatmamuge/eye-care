@@ -2,7 +2,7 @@ import tkinter as tk
 import time
 import threading
 
-WORK_MINUTES = 0.1
+WORK_MINUTES = 25
 
 def popup():
     root = tk.Tk()
